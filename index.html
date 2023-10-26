@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Criptografia</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0F0;
+            font-family: "Courier New", monospace;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: "Orbitron", sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        form {
+            width: 400px;
+            margin: 0 auto;
+            padding: 50px;
+            background-color: #111;
+            border: 1px solid #0F0;
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            background-color: #222;
+            border: 1px solid #0F0;
+            border-radius: 3px;
+            color: #0F0;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #0F0;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #090;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            color: #0F0;
+            font-family: "Lucida Console", monospace;
+            white-space: pre-wrap;
+        }
+
+        #copy-button {
+            margin-top: 10px;
+        }
+		
+		#backgroundMusic {
+            display: none; /* Oculta o player de áudio */
+        }
+    </style>
+</head>
+<body>
+    <h1>E.S.I.A.C</h1>
+		  <audio id="backgroundMusic" autoplay loop>
+    <source src="underwater-white-noise-46423.mp3" type="audio/mp3">
+    <source src="underwater-white-noise-46423.mp3" type="audio/mp3">
+		<audio id="criptoSound" src="som_criptografia.mp3"></audio>
+<audio id="descriptoSound" src="som_descriptografia.mp3"></audio>
+    Your browser does not support the audio element.
+</audio>
+		
+		<!-- Adicionando os sons -->
+    <audio id="tecladoSound" src="keyboard-typing-5997 (mp3cut.net).mp3"></audio>
+    <audio id="clickSound" src="mouse-click-153941.mp3"></audio>
+		
+    <form>
+		<button type="button" onclick="limparCampos()" style="font-size: 12px; margin: 0 auto; display: block;">Limpar Campos</button>
+			
+        <label for="mensagem">Mensagem:</label>
+        <input type="text" id="mensagem" name="mensagem" required><br>
+
+        <label for="chave">Chave:</label>
+        <input type="text" id="chave" name="chave" required><br>
+
+      <div style="text-align: center;">
+    <button type="button" onclick="criptografar()" style="margin: 10px; display: inline-block;">Criptografar</button>
+    <button type="button" onclick="descriptografar()" style="margin: 10px; display: inline-block;">Descriptografar</button>
+</div>
+
+<p id="resultado"></p>
+<button id="copy-button" type="button" onclick="copiarResultado()" disabled style="margin: 20px auto; display: block; font-size: 14px; padding: 8px 16px;">Copiar Resultado</button>
+    </form>
+
+    <script>
+  // Adicionando os eventos para tocar os sons
+        document.getElementById("mensagem").addEventListener("input", function() {
+            document.getElementById("tecladoSound").currentTime = 0; // Reinicia o som se estiver tocando
+            document.getElementById("tecladoSound").play();
+        });
+		
+		document.getElementById("chave").addEventListener("input", function() {
+            document.getElementById("tecladoSound").currentTime = 0; // Reinicia o som se estiver tocando
+            document.getElementById("tecladoSound").play();
+        });
+
+        document.addEventListener("click", function() {
+            document.getElementById("clickSound").currentTime = 0; // Reinicia o som se estiver tocando
+            document.getElementById("clickSound").play();
+        });
+		
+		function limparCampos() {
+    document.getElementById("mensagem").value = ""; // Limpa o campo de mensagem
+    document.getElementById("chave").value = ""; // Limpa o campo de chave
+    document.getElementById("resultado").innerHTML = ""; // Limpa a mensagem de resultado
+    document.getElementById("copy-button").disabled = true; // Desabilita o botão de cópia
+}
+
+        function criptografar() {
+            var mensagem = document.getElementById("mensagem").value;
+            var chave = document.getElementById("chave").value;
+
+            var resultado = "";
+
+            for (var i = 0; i < mensagem.length; i++) {
+                var letra = mensagem[i];
+                if (letra.match(/[a-z]/i)) {
+                    var base = letra === letra.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+                    var indiceChave = (i % chave.length);
+                    var indice = (letra.charCodeAt(0) - base + chave.charCodeAt(indiceChave) - base + 26) % 26;
+                    var letraCriptografada = String.fromCharCode(base + indice);
+                    resultado += letraCriptografada;
+                } else {
+                    resultado += letra;
+                }
+            }
+
+            resultado = resultado.toUpperCase();
+
+            document.getElementById("resultado").style.textAlign = "center";
+document.getElementById("resultado").innerHTML = "Mensagem criptografada: " + resultado;
+habilitarBotaoCopiar();
+var criptoAudio = document.getElementById("criptoSound");
+criptoAudio.play();
+        }
+
+        function descriptografar() {
+            var mensagemCriptografada = document.getElementById("mensagem").value;
+            var chave = document.getElementById("chave").value;
+
+            var resultado = "";
+
+            for (var i = 0; i < mensagemCriptografada.length; i++) {
+                var letra = mensagemCriptografada[i];
+                if (letra.match(/[a-z]/i)) {
+                    var base = letra === letra.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+                    var indiceChave = (i % chave.length);
+                    var indice = (letra.charCodeAt(0) - base - (chave.charCodeAt(indiceChave) - base) + 26) % 26;
+                    var letraDescriptografada = String.fromCharCode(base + indice);
+                    resultado += letraDescriptografada;
+                } else {
+                    resultado += letra;
+                }
+            }
+
+            document.getElementById("resultado").innerHTML = "Mensagem descriptografada: " + resultado;
+            habilitarBotaoCopiar();
+			var descriptoAudio = document.getElementById("descriptoSound");
+descriptoAudio.play();
+        }
+
+        function habilitarBotaoCopiar() {
+            var resultado = document.getElementById("resultado").innerHTML;
+            var copyButton = document.getElementById("copy-button");
+            copyButton.disabled = resultado ? false : true;
+        }
+
+        function copiarResultado() {
+            var resultado = document.getElementById("resultado").innerHTML;
+            var tempInput = document.createElement("textarea");
+            tempInput.value = resultado;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+        }
+    </script>
+</body>
+</html>
