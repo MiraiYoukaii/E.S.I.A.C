@@ -108,96 +108,58 @@
     </form>
 
     <script>
-  // Adicionando os eventos para tocar os sons
-        document.getElementById("mensagem").addEventListener("input", function() {
-            document.getElementById("tecladoSound").currentTime = 0; // Reinicia o som se estiver tocando
-            document.getElementById("tecladoSound").play();
-        });
-		
-		document.getElementById("chave").addEventListener("input", function() {
-            document.getElementById("tecladoSound").currentTime = 0; // Reinicia o som se estiver tocando
-            document.getElementById("tecladoSound").play();
-        });
+  function criptografar() {
+    var mensagem = document.getElementById("mensagem").value;
+    var chave = document.getElementById("chave").value;
 
-        document.addEventListener("click", function() {
-            document.getElementById("clickSound").currentTime = 0; // Reinicia o som se estiver tocando
-            document.getElementById("clickSound").play();
-        });
-		
-		function limparCampos() {
-    document.getElementById("mensagem").value = ""; // Limpa o campo de mensagem
-    document.getElementById("chave").value = ""; // Limpa o campo de chave
-    document.getElementById("resultado").innerHTML = ""; // Limpa a mensagem de resultado
-    document.getElementById("copy-button").disabled = true; // Desabilita o botão de cópia
+    var resultado = "";
+
+    for (var i = 0; i < mensagem.length; i++) {
+        var letra = mensagem[i];
+        if (letra.match(/[a-z]/i)) {
+            var base = letra === letra.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
+            var indiceChave = (i % chave.length);
+            var indice = (letra.charCodeAt(0) - base + chave.charCodeAt(indiceChave) - base + 26) % 26;
+            var letraCriptografada = String.fromCharCode(base + indice);
+            resultado += letraCriptografada;
+        } else {
+            resultado += letra;
+        }
+    }
+
+    resultado = resultado.toUpperCase();
+
+    document.getElementById("resultado").style.textAlign = "center";
+    document.getElementById("resultado").innerHTML = "Mensagem criptografada: " + resultado;
+    habilitarBotaoCopiar();
+    var criptoAudio = document.getElementById("criptoSound");
+    criptoAudio.play();
 }
 
-        function criptografar() {
-            var mensagem = document.getElementById("mensagem").value;
-            var chave = document.getElementById("chave").value;
+function descriptografar() {
+    var mensagemCriptografada = document.getElementById("mensagem").value.toLowerCase(); // Convertendo para minúsculas
+    var chave = document.getElementById("chave").value.toLowerCase(); // Convertendo a chave para minúsculas
 
-            var resultado = "";
+    var resultado = "";
 
-            for (var i = 0; i < mensagem.length; i++) {
-                var letra = mensagem[i];
-                if (letra.match(/[a-z]/i)) {
-                    var base = letra === letra.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
-                    var indiceChave = (i % chave.length);
-                    var indice = (letra.charCodeAt(0) - base + chave.charCodeAt(indiceChave) - base + 26) % 26;
-                    var letraCriptografada = String.fromCharCode(base + indice);
-                    resultado += letraCriptografada;
-                } else {
-                    resultado += letra;
-                }
-            }
-
-            resultado = resultado.toUpperCase();
-
-            document.getElementById("resultado").style.textAlign = "center";
-document.getElementById("resultado").innerHTML = "Mensagem criptografada: " + resultado;
-habilitarBotaoCopiar();
-var criptoAudio = document.getElementById("criptoSound");
-criptoAudio.play();
+    for (var i = 0; i < mensagemCriptografada.length; i++) {
+        var letra = mensagemCriptografada[i];
+        if (letra.match(/[a-z]/i)) {
+            var base = 'a'.charCodeAt(0); // Sempre minúscula agora
+            var indiceChave = (i % chave.length);
+            var indice = (letra.charCodeAt(0) - base - (chave.charCodeAt(indiceChave) - base) + 26) % 26;
+            var letraDescriptografada = String.fromCharCode(base + indice);
+            resultado += letraDescriptografada;
+        } else {
+            resultado += letra;
         }
+    }
 
-        function descriptografar() {
-            var mensagemCriptografada = document.getElementById("mensagem").value;
-            var chave = document.getElementById("chave").value;
-
-            var resultado = "";
-
-            for (var i = 0; i < mensagemCriptografada.length; i++) {
-                var letra = mensagemCriptografada[i];
-                if (letra.match(/[a-z]/i)) {
-                    var base = letra === letra.toLowerCase() ? 'a'.charCodeAt(0) : 'A'.charCodeAt(0);
-                    var indiceChave = (i % chave.length);
-                    var indice = (letra.charCodeAt(0) - base - (chave.charCodeAt(indiceChave) - base) + 26) % 26;
-                    var letraDescriptografada = String.fromCharCode(base + indice);
-                    resultado += letraDescriptografada;
-                } else {
-                    resultado += letra;
-                }
-            }
-
-            document.getElementById("resultado").innerHTML = "Mensagem descriptografada: " + resultado;
-            habilitarBotaoCopiar();
-			var descriptoAudio = document.getElementById("descriptoSound");
-descriptoAudio.play();
-        }
-
-        function habilitarBotaoCopiar() {
-            var resultado = document.getElementById("resultado").innerHTML;
-            var copyButton = document.getElementById("copy-button");
-            copyButton.disabled = resultado ? false : true;
-        }
-
-        function copiarResultado() {
-            var resultado = document.getElementById("resultado").innerHTML;
-            var tempInput = document.createElement("textarea");
-            tempInput.value = resultado;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
+    document.getElementById("resultado").innerHTML = "Mensagem descriptografada: " + resultado;
+    habilitarBotaoCopiar();
+    var descriptoAudio = document.getElementById("descriptoSound");
+    descriptoAudio.play();
+}emoveChild(tempInput);
         }
     </script>
 </body>
